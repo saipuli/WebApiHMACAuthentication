@@ -19,7 +19,7 @@ namespace HMACAuthentication.WebApi.Filters
     public class HMACAuthenticationAttribute : Attribute, IAuthenticationFilter
     {
         private static Dictionary<string, string> allowedApps = new Dictionary<string, string>();
-        private readonly UInt64 requestMaxAgeInSeconds = 300;  //5 mins
+        private readonly long requestMaxAgeInSeconds = 300;  //5 mins
         private readonly string authenticationScheme = "amx";
 
         public HMACAuthenticationAttribute()
@@ -152,7 +152,7 @@ namespace HMACAuthentication.WebApi.Filters
             var serverTotalSeconds = Convert.ToUInt64(currentTs.TotalSeconds);
             var requestTotalSeconds = Convert.ToUInt64(requestTimeStamp);
 
-            if ((serverTotalSeconds - requestTotalSeconds) > requestMaxAgeInSeconds)
+            if (Math.Abs((Int64)(serverTotalSeconds - requestTotalSeconds)) > requestMaxAgeInSeconds)
             {
                 return true;
             }
